@@ -7,17 +7,20 @@
 <h1>Il gioco del Quindici - Fifteen Puzzle</h1>
 <h2>by Andrea Piscitelli</h2>
 
-@if (numeri == null)
+@if (tiles == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+    <span class="oi oi-plus btn-lg pointer" aria-hidden="true" @onclick="() => Restart()"></span>
+
     if (Tiles.Done)
     {
-        <h3>OTTIMO!</h3>
+        <h3>Well Done!</h3>
         <br />
-        <button class="btn" @onclick="() => Ricomincia()"><i class="fas fa-plus fa-2x"></i></button>
+        <button class="btn" @onclick="() => Restart()"><i class="fas fa-plus fa-2x"></i></button>
+        <span class="oi oi-plus btn-lg pointer" aria-hidden="true" @onclick="() => Restart()"></span>
     }
     <table class="fifteenpuzzle">
         <tbody>
@@ -26,12 +29,12 @@ else
                 <tr class="fifteenpuzzle">
                     @for (int column = 0; column < 4; column++)
                     {
-                        num = numeri.Where(n => n.Row == riga && n.Column == column).FirstOrDefault();
-                        int indexR = num.Row;
-                        int indexC = num.Column;
-                        string sfondo = num.backgroundColor;
-                        <td class="fifteenpuzzle @sfondo" @onclick="() => ClickCella(indexR, indexC)">
-                            @num.Number
+                        tile = tiles.Where(n => n.Row == riga && n.Column == column).FirstOrDefault();
+                        int indexR = tile.Row;
+                        int indexC = tile.Column;
+                        string sfondo = tile.backgroundColor;
+                        <td class="fifteenpuzzle @sfondo" @onclick="() => ClickTile(indexR, indexC)">
+                            @tile.Number
                         </td>
                     }
                 </tr>
@@ -41,32 +44,31 @@ else
 }
 
 @code {
-    private List<Tile> numeri;
-    private Tile num;
+    private List<Tile> tiles;
+    private Tile tile;
 
     protected override void OnInitialized()
     {
-        numeri = Tiles.GenerateTiles();
+        tiles = Tiles.GenerateTiles();
     }
 
-    protected void ClickCella(int riga, int colonna)
+    protected void ClickTile(int riga, int colonna)
     {
         if (!Tiles.Done)
         {
-            numeri = Tiles.TryMoveTile(riga, colonna);
+            tiles = Tiles.TryMoveTile(riga, colonna);
             RefreshPage();
         }
     }
 
-    protected void Ricomincia()
+    protected void Restart()
     {
-        numeri = Tiles.Restart();
+        tiles = Tiles.Restart();
         RefreshPage();
     }
 
     protected void RefreshPage()
     {
         this.StateHasChanged();
-        //NavigationManager.NavigateTo("refresh");
     }
 }

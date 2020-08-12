@@ -31,3 +31,7 @@ tr.fifteenpuzzle:nth-child(even) td.chessboard:nth-child(odd) {
 .blackBackground {
     background: #222;
 }
+
+.pointer {
+    cursor: pointer;
+}
