@@ -4,8 +4,9 @@
 @using Quindici.Data
 @inject TilesGenerator Tiles
 
-<h1>Il gioco del Quindici - Fifteen Puzzle</h1>
-<h2>by Andrea Piscitelli</h2>
+<h1>Il gioco del Quindici</h1>
+<h2>Fifteen Puzzle</h2>
+<h4>by Andrea Piscitelli</h4>
 
 @if (tiles == null)
 {
@@ -15,12 +16,8 @@ else
 {
     if (Tiles.Done)
     {
-        <h3>Well Done!</h3>
-        <br />
-        <button class="btn" @onclick="() => Restart()"><i class="fas fa-plus fa-2x"></i></button>
-        <span class="oi oi-reload btn btn-info btn-lg bigButton pointer" aria-hidden="true"></span>
     }
-    <table class="fifteenpuzzle">
+    <table class="fifteenpuzzle mt-0 pt-0 mb-2">
         <tbody>
             @for (int riga = 0; riga < 4; riga++)
             {
@@ -39,6 +36,14 @@ else
             }
         </tbody>
     </table>
+    if (Tiles.Done)
+    {
+        <div class="text-center mt-1 pt-1">
+            <h3>Well Done!</h3>
+            <span class="oi oi-reload btn btn-info btn-lg bigButton pointer" aria-hidden="true"></span>
+        </div>
+    }
+
 }
 
 @code {
