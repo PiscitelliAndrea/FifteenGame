@@ -34,7 +34,7 @@ namespace Quindici.Data
                 int nextNum = 0;
                 TilesList = new List<Tile>();
 
-                for (int index = 0; index < MaxNumOfTiles; index++)
+                for (int index = 1; index < MaxNumOfTiles; index++)
                 {
                     var item = new Tile();
                     item.Row = row;
@@ -42,15 +42,12 @@ namespace Quindici.Data
 
                     do
                     {
-                        nextNum = rnd.Next(0, 16);
+                        nextNum = rnd.Next(1, MaxNumOfTiles);
                     }
                     while (TilesList.Where(n => n.number == nextNum).Any());
 
                     item.number = nextNum;
                     item.backgroundColor = ((nextNum % 2) == 0) ? "darkBackground" : "lightBackground";
-
-                    if (nextNum == 0)
-                        item.backgroundColor = "blackBackground";
 
                     TilesList.Add(item);
 
@@ -61,6 +58,14 @@ namespace Quindici.Data
                         row += 1;
                     }
                 }
+
+                var emptyTile = new Tile();
+                emptyTile.Row = emptyTile.Column = 3;
+                emptyTile.number = 0;
+                emptyTile.backgroundColor = "blackBackground";
+
+                TilesList.Add(emptyTile);
+
             }
 
             return GetAllTiles();

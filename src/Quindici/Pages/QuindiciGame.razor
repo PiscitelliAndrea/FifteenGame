@@ -13,14 +13,14 @@
 }
 else
 {
-    <span class="oi oi-plus btn-lg pointer" aria-hidden="true" @onclick="() => Restart()"></span>
+<span class="oi oi-reload btn btn-info btn-lg bigButton pointer" aria-hidden="true"></span>
 
     if (Tiles.Done)
     {
         <h3>Well Done!</h3>
         <br />
         <button class="btn" @onclick="() => Restart()"><i class="fas fa-plus fa-2x"></i></button>
-        <span class="oi oi-plus btn-lg pointer" aria-hidden="true" @onclick="() => Restart()"></span>
+        <span class="oi oi-reload btn btn-info btn-lg bigButton pointer" aria-hidden="true"></span>
     }
     <table class="fifteenpuzzle">
         <tbody>

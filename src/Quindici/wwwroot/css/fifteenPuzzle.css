@@ -35,3 +35,7 @@ tr.fifteenpuzzle:nth-child(even) td.chessboard:nth-child(odd) {
 .pointer {
     cursor: pointer;
 }
+
+.bigButton {
+    font-size: 48px;
+}
