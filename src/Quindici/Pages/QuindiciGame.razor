@@ -1,0 +1,72 @@
+﻿@page "/"
+@page "/QuindiciGame"
+
+@using Quindici.Data
+@inject TilesGenerator Tiles
+
+<h1>Il gioco del Quindici - Fifteen Puzzle</h1>
+<h2>by Andrea Piscitelli</h2>
+
+@if (numeri == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    if (Tiles.Done)
+    {
+        <h3>OTTIMO!</h3>
+        <br />
+        <button class="btn" @onclick="() => Ricomincia()"><i class="fas fa-plus fa-2x"></i></button>
+    }
+    <table class="fifteenpuzzle">
+        <tbody>
+            @for (int riga = 0; riga < 4; riga++)
+            {
+                <tr class="fifteenpuzzle">
+                    @for (int column = 0; column < 4; column++)
+                    {
+                        num = numeri.Where(n => n.Row == riga && n.Column == column).FirstOrDefault();
+                        int indexR = num.Row;
+                        int indexC = num.Column;
+                        string sfondo = num.backgroundColor;
+                        <td class="fifteenpuzzle @sfondo" @onclick="() => ClickCella(indexR, indexC)">
+                            @num.Number
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Tile> numeri;
+    private Tile num;
+
+    protected override void OnInitialized()
+    {
+        numeri = Tiles.GenerateTiles();
+    }
+
+    protected void ClickCella(int riga, int colonna)
+    {
+        if (!Tiles.Done)
+        {
+            numeri = Tiles.TryMoveTile(riga, colonna);
+            RefreshPage();
+        }
+    }
+
+    protected void Ricomincia()
+    {
+        numeri = Tiles.Restart();
+        RefreshPage();
+    }
+
+    protected void RefreshPage()
+    {
+        this.StateHasChanged();
+        //NavigationManager.NavigateTo("refresh");
+    }
+}

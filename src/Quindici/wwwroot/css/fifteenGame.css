@@ -1,0 +1,33 @@
+﻿table.fifteenpuzzle {
+    margin: 80px auto;
+    border: 25px solid #333;
+    border-collapse: collapse; /* */
+}
+
+td.fifteenpuzzle {
+    width: 90px;
+    height: 90px;
+    border: 6px solid #333; /* */
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: xx-large;
+    color: lime;
+}
+
+tr.fifteenpuzzle:nth-child(odd) td.chessboard:nth-child(even),
+tr.fifteenpuzzle:nth-child(even) td.chessboard:nth-child(odd) {
+    background: white;
+}
+
+.darkBackground {
+    background: #999;
+}
+
+.lightBackground {
+    background: #eee;
+}
+
+.blackBackground {
+    background: #222;
+}
