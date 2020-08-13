@@ -11,7 +11,7 @@
 }
 else
 {
-    <table class="fifteenpuzzle mt-0 pt-0 mb-2">
+    <table class="fifteenpuzzle mt-0 pt-0 mb-0">
         <tbody>
             @for (int riga = 0; riga < 4; riga++)
             {
@@ -30,6 +30,11 @@ else
             }
         </tbody>
     </table>
+    @if (ElapsedTime.TotalSeconds > 0)
+    {
+        <h2 class="text-center">@ElapsedTime</h2>
+    }
+
     if (Tiles.Done)
     {
         <div class="text-center mt-1 pt-1">
