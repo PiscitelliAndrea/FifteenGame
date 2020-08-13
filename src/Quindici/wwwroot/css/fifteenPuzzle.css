@@ -12,7 +12,7 @@ td.fifteenpuzzle {
     font-weight: bold;
     cursor: pointer;
     font-size: xx-large;
-    color: lime;
+    color: #0fd30f;
 }
 
 tr.fifteenpuzzle:nth-child(odd) td.chessboard:nth-child(even),
@@ -21,7 +21,7 @@ tr.fifteenpuzzle:nth-child(even) td.chessboard:nth-child(odd) {
 }
 
 .darkBackground {
-    background: #999;
+    background: #903838;
 }
 
 .lightBackground {
