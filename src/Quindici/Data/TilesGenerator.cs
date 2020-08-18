@@ -137,6 +137,10 @@ namespace Quindici.Data
             this.Done = CheckSolution();
         }
 
+        /// <summary>
+        /// Checks is the puzzle has been successfully solved
+        /// </summary>
+        /// <returns></returns>
         private bool CheckSolution()
         {
             int num = 1;
