@@ -27,10 +27,12 @@ jobs:
 #      working-directory: ./src
 
     - name: Build and deploy package
+      working-directory: ./src
       run: |
         cd ./src/
         dotnet publish -c=Release
         # deploy
+
 
 
 #   - name: Test
