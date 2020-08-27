@@ -65,7 +65,6 @@ namespace Quindici.Data
                 emptyTile.backgroundColor = "blackBackground";
 
                 TilesList.Add(emptyTile);
-
             }
 
             return GetAllTiles();

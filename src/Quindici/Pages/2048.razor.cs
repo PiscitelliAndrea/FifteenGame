@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Components;
-using Quindici.Data;
+﻿using G2048.Data;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Quindici.Pages
+namespace G2048.Pages
 {
-    public partial class QuindiciGame : ComponentBase
+    public partial class G2048Game : ComponentBase
     {
         #region Injection
 
         [Inject]
-        protected TilesGenerator Tiles { get; set; }
+        protected NumbersGenerator Numbers { get; set; }
 
         #endregion
 
@@ -20,8 +20,8 @@ namespace Quindici.Pages
         protected Timer timer { get; set; }
         protected bool TimerStarted = false;
 
-        protected List<Tile> tiles;
-        protected Tile tile;
+        protected List<Number> numbers;
+        protected Number number;
 
         //private int ElapsedTime { get; set; }
         protected TimeSpan ElapsedTime = TimeSpan.FromMilliseconds(0);
@@ -30,18 +30,15 @@ namespace Quindici.Pages
 
         #region Life Cycle events
 
-        protected override void OnInitialized()
-        {
-            tiles = Tiles.GenerateTiles();
-        }
+        protected override void OnInitialized() => numbers = Numbers.GenerateNumbers();
 
         #endregion
 
-        #region Tiles Methods
+        #region Numbers Methods
 
-        protected void ClickTile(int riga, int colonna)
+        protected void ClickNumber(int direzione)
         {
-            if (!Tiles.Done)
+            if (!Numbers.Done)
             {
                 if (!TimerStarted)
                 {
@@ -49,8 +46,8 @@ namespace Quindici.Pages
                     StartCounter();
                 }
 
-                tiles = Tiles.TryMoveTile(riga, colonna);
-                if (Tiles.Done)
+                numbers = Numbers.TryMoveNumber(direzione);
+                if (Numbers.Done)
                     StopCounter();
                 this.StateHasChanged();
             }
@@ -61,7 +58,7 @@ namespace Quindici.Pages
             ResetCounter();
             TimerStarted = true;
             StartCounter();
-            tiles = Tiles.Restart();
+            numbers = Numbers.Restart();
             this.StateHasChanged();
         }
 
