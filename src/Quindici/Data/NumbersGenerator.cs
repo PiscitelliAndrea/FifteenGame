@@ -86,16 +86,26 @@ namespace G2048.Data
             return GetAllNumbers();
         }
 
-        private string GetBackgroundColor(int value)
+        private List<Number> GenerateNewNumber()
         {
-            return "g2048BG_" + value.ToString();
-        }
+            Random rnd = new Random();
+            int NewRow = -1;
+            int NewColumn = -1;
 
-        private int GetNewNumber(Random rnd)
-        {
-            // Possibili valori: 2 e 4.
-            // 80% probabilità per il 2, 20% per il 4.
-            return rnd.Next(0, 100) < 80 ? 2 : 4;
+            // PRIMA VERIFICO CHE CI SIANO POSIZIONI LIBERE
+
+            do
+            {
+                NewRow = rnd.Next(0, MaxNumOfRow - 1);
+                NewColumn = rnd.Next(0, MaxNumOfColumn - 1);
+            }
+            while (NumbersList.Where(n => n.Row == NewRow && n.Column == NewColumn && n.number != 0).Any());
+
+            Number NewNumber = NumbersList.Where(n => n.Row == NewRow && n.Column == NewColumn).FirstOrDefault();
+            NewNumber.number = GetNewNumber(rnd);
+            NewNumber.backgroundColor = GetBackgroundColor(NewNumber.number);
+
+            return GetAllNumbers();
         }
 
         private List<Number> GetAllNumbers()
@@ -109,14 +119,15 @@ namespace G2048.Data
 
         public List<Number> TryMoveNumber(int direzione)
         {
+            bool squashed = false;
+            bool moved = false;
+
             switch (direzione)
             {
                 case 1: // UP
                     // Per ogni colonna
                     for (int indexColumn = 0; indexColumn < MaxNumOfColumn; indexColumn++)
                     {
-                        bool squashed = false;
-
                         // Prima avvicino tutte le celle
                         for (int indexRow = 1; indexRow < MaxNumOfRow - 1; indexRow++)
                         {
@@ -129,8 +140,8 @@ namespace G2048.Data
                                 for (int indexRowToSlide = indexRow; indexRowToSlide < MaxNumOfRow; indexRowToSlide++)
                                 {
                                     MoveNumber(indexRowToSlide, indexColumn, Direction.Up);
+                                    moved = true;
                                 }
-                                //indexRow = 0;
                             }
                         }
 
@@ -147,7 +158,7 @@ namespace G2048.Data
                                 if (ThisNumber.number == PreviousNumber.number)
                                 {
                                     SquashNumber(indexRow, indexColumn, Direction.Up);
-                                    squashed = true;
+                                    squashed = moved = true;
                                 }
                                 else if (PreviousNumber.number == 0)
                                 {
@@ -183,8 +194,13 @@ namespace G2048.Data
             //    MoveNumber(row, column, Direction.Right);
             //}
 
-            return GetAllNumbers();
+            if (moved)
+                return GenerateNewNumber();
+            else
+                return GetAllNumbers();
         }
+
+
 
         //private void MoveNumber(int row, int column, Direction direction)
         //{
@@ -328,6 +344,19 @@ namespace G2048.Data
             From.backgroundColor = GetBackgroundColor(From.number);
             To.backgroundColor = GetBackgroundColor(To.number);
         }
+
+        private string GetBackgroundColor(int value)
+        {
+            return "g2048BG_" + value.ToString();
+        }
+
+        private int GetNewNumber(Random rnd)
+        {
+            // Possibili valori: 2 e 4.
+            // 80% probabilità per il 2, 20% per il 4.
+            return rnd.Next(0, 100) < 80 ? 2 : 4;
+        }
+
     }
 }
 
