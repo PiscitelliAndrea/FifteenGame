@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using static Quindici.Data.Enums;
 
 namespace G2048.Pages
 {
@@ -36,7 +37,7 @@ namespace G2048.Pages
 
         #region Numbers Methods
 
-        protected void ClickNumber(int direzione)
+        protected void ClickNumber(Direction direzione)
         {
             if (!Numbers.Done)
             {

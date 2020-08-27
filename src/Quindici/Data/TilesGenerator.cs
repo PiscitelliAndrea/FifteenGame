@@ -1,21 +1,10 @@
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Quindici.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
+using static Quindici.Data.Enums;
 
 namespace Quindici.Data
 {
-    enum Direction
-    {
-        Up,
-        Down,
-        Right,
-        Left
-    }
-
     public class TilesGenerator
     {
         private static int MaxNumOfTiles = 16;
