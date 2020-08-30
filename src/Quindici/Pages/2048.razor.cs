@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using static Quindici.Data.Enums;
 
 namespace G2048.Pages
@@ -37,7 +38,7 @@ namespace G2048.Pages
 
         #region Numbers Methods
 
-        protected void ClickNumber(Direction direzione)
+        protected async Task ClickNumber(Direction direzione)
         {
             if (!Numbers.Done)
             {
@@ -48,10 +49,21 @@ namespace G2048.Pages
                 }
 
                 numbers = Numbers.TryMoveNumber(direzione);
+                this.StateHasChanged();
+                await Task.Delay(400);
+
+                await NewNumber();
+                
                 if (Numbers.Done)
                     StopCounter();
-                this.StateHasChanged();
             }
+        }
+
+        protected async Task NewNumber()
+        {
+            if (Numbers.Moved)
+                numbers = Numbers.GenerateNewNumber();
+            this.StateHasChanged();
         }
 
         protected void Restart()
