@@ -10,6 +10,7 @@ namespace G2048.Data
         private static int MaxNumOfNumbers = 16;
         private static int MaxNumOfRow = 4;
         private static int MaxNumOfColumn = 4;
+
         private List<Number> NumbersList = null;
         public int Score = 0;
         public bool Moved = false;
@@ -130,10 +131,12 @@ namespace G2048.Data
                     this.Moved |= MergeRow(indexRow, direzione, ref squashed);
                 }
 
+            this.Done = CheckSolution();
+
             return GetAllNumbers();
         }
 
-        private bool CompactColumn(int indexColumn, Direction direzione)
+        private bool CompactColumn(int indexColumn, Direction direzione, int startingRow = 1)
         {
             bool moved = false;
             bool done = false;
@@ -145,7 +148,7 @@ namespace G2048.Data
                 switch (direzione)
                 {
                     case Direction.Up:
-                        for (int indexRow = 1; indexRow < MaxNumOfRow; indexRow++)
+                        for (int indexRow = startingRow; indexRow < MaxNumOfRow; indexRow++)
                         {
                             // Confronto la cella corrente con quella precedente
                             Number ThisNumber = NumbersList.Where(n => n.Row == indexRow && n.Column == indexColumn).First();
@@ -187,7 +190,7 @@ namespace G2048.Data
             return moved;
         }
 
-        private bool CompactRow(int indexRow, Direction direzione)
+        private bool CompactRow(int indexRow, Direction direzione, int startingColumn = 1)
         {
             bool moved = false;
             bool done = false;
@@ -199,7 +202,7 @@ namespace G2048.Data
                 switch (direzione)
                 {
                     case Direction.Left:
-                        for (int indexColumn = 1; indexColumn < MaxNumOfColumn; indexColumn++)
+                        for (int indexColumn = startingColumn; indexColumn < MaxNumOfColumn; indexColumn++)
                         {
                             // Confronto la cella corrente con quella precedente
                             Number ThisNumber = NumbersList.Where(n => n.Row == indexRow && n.Column == indexColumn).First();
@@ -208,6 +211,25 @@ namespace G2048.Data
                             if (ThisNumber.number != 0 && PreviousNumber.number == 0)
                             {
                                 for (int indexColumnToSlide = indexColumn; indexColumnToSlide < MaxNumOfColumn; indexColumnToSlide++)
+                                {
+                                    MoveNumberByRow(indexRow, indexColumnToSlide, direzione);
+                                    moved = true;
+                                    done = false;
+                                }
+                            }
+                        }
+                        break;
+
+                    case Direction.Right:
+                        for (int indexColumn = MaxNumOfColumn - 2; indexColumn >= 0; indexColumn--)
+                        {
+                            // Confronto la cella corrente con quella precedente
+                            Number ThisNumber = NumbersList.Where(n => n.Row == indexRow && n.Column == indexColumn).First();
+                            Number PreviousNumber = NumbersList.Where(n => n.Row == indexRow && n.Column == indexColumn + 1).First();
+
+                            if (ThisNumber.number != 0 && PreviousNumber.number == 0)
+                            {
+                                for (int indexColumnToSlide = indexColumn; indexColumnToSlide >= 0; indexColumnToSlide--)
                                 {
                                     MoveNumberByRow(indexRow, indexColumnToSlide, direzione);
                                     moved = true;
@@ -314,6 +336,33 @@ namespace G2048.Data
                         }
                     }
                     break;
+
+                case Direction.Right:
+                    for (int indexColumn = MaxNumOfColumn - 2; indexColumn >= 0; indexColumn--)
+                    {
+                        // Confronto la cella corrente con quella precedente
+                        Number ThisNumber = NumbersList.Where(n => n.Column == indexColumn && n.Row == indexRow).First();
+                        Number PreviousNumber = NumbersList.Where(n => n.Column == indexColumn + 1 && n.Row == indexRow).First();
+
+                        if (ThisNumber.number != 0)
+                        {
+                            // Stesso numero -> Squash
+                            if (ThisNumber.number == PreviousNumber.number)
+                            {
+                                SquashNumber(indexRow, indexColumn, direction);
+                                squashed = Moved = true;
+                            }
+                            else if (PreviousNumber.number == 0)
+                            {
+                                MoveNumberByRow(indexColumn, indexRow, direction);
+                                if (!squashed)
+                                    indexColumn--;
+                                else
+                                    squashed = false;
+                            }
+                        }
+                    }
+                    break;
             }
 
             return Moved;
@@ -329,24 +378,28 @@ namespace G2048.Data
             {
                 case Direction.Up:
                     tmpTo = NumbersList.Where(n => n.Row == (row - 1) && n.Column == column).FirstOrDefault();
+                    SquashNumbers(tmpFrom, tmpTo);
+                    CompactColumn(column, direction, tmpFrom.Row);
                     break;
 
                 case Direction.Down:
                     tmpTo = NumbersList.Where(n => n.Row == (row + 1) && n.Column == column).FirstOrDefault();
+                    SquashNumbers(tmpFrom, tmpTo);
+                    CompactColumn(column, direction, tmpFrom.Row);
                     break;
 
                 case Direction.Left:
                     tmpTo = NumbersList.Where(n => n.Row == row && n.Column == (column - 1)).FirstOrDefault();
+                    SquashNumbers(tmpFrom, tmpTo);
+                    CompactRow(row, direction, tmpFrom.Column);
                     break;
 
                 case Direction.Right:
                     tmpTo = NumbersList.Where(n => n.Row == row && n.Column == (column + 1)).FirstOrDefault();
+                    SquashNumbers(tmpFrom, tmpTo);
+                    CompactRow(row, direction, tmpFrom.Column);
                     break;
             }
-
-            SquashTiles(tmpFrom, tmpTo);
-
-            this.Done = CheckSolution();
         }
 
         private void MoveNumberByColumn(int row, int column, Direction direction)
@@ -426,12 +479,12 @@ namespace G2048.Data
             return GenerateNumbers();
         }
 
-        private void SquashTiles(Number From, Number To)
+        private void SquashNumbers(Number From, Number To)
         {
             int value = From.number;
             string background = From.backgroundColor;
+            To.number += From.number;
             From.number = 0;
-            To.number *= 2;
             From.backgroundColor = GetBackgroundColor(From.number);
             To.backgroundColor = GetBackgroundColor(To.number);
 
