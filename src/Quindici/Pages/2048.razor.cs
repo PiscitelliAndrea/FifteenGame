@@ -32,7 +32,7 @@ namespace G2048.Pages
 
         #region Life Cycle events
 
-        protected override void OnInitialized() => numbers = Numbers.GenerateNumbers();
+        protected override void OnInitialized() => numbers = Numbers.GenerateTwoInitialNumbers();
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace G2048.Pages
 
         protected async Task ClickNumber(Direction direzione)
         {
-            if (!Numbers.Done)
+            if (!Numbers.GameOver)
             {
                 if (!TimerStarted)
                 {
@@ -54,7 +54,7 @@ namespace G2048.Pages
 
                 await NewNumber();
                 
-                if (Numbers.Done)
+                if (Numbers.GameOver)
                     StopCounter();
             }
         }

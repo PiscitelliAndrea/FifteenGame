@@ -109,30 +109,41 @@ td.g2048Buttons {
 }
 
 .g2048BG_32 {
-    color: #F7F7ED;
+    color: #FDF3F1;
     background: #F57C5F;
 }
 
 .g2048BG_64 {
-    background: #EEE4DA;
+    color: #F7F8F1;
+    background: #F65D3B;
 }
 
 .g2048BG_128 {
-    background: #EEE4DA;
+    color: #F6F5F0;
+    background: #EDCE71;
 }
 
 .g2048BG_256 {
-    background: #EEE4DA;
+    color: #FBF7ED;
+    background: #EDCC61;
 }
 
 .g2048BG_512 {
-    background: #EEE4DA;
+    color: #F7F6F3;
+    background: #ECC850;
 }
 
 .g2048BG_1024 {
-    background: #EEE4DA;
+    color: #F7F7ED;
+    background: #F57C5F;
 }
 
 .g2048BG_2048 {
-    background: #EEE4DA;
+    color: #F7F7ED;
+    background: #F57C5F;
+}
+
+.g2048BG_4096 {
+    color: #F7F7ED;
+    background: #F57C5F;
 }
